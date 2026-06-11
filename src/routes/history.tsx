@@ -1,6 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Trash2, Download, History as HistoryIcon } from "lucide-react";
+import { Trash2, Download, History as HistoryIcon, ArrowRight, Calculator } from "lucide-react";
 import { clearHistory, deleteEntry, exportCSV, useHistory } from "@/lib/history";
 import { cn } from "@/lib/utils";
 
@@ -52,12 +52,20 @@ function HistoryPage() {
       </div>
 
       {list.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-border p-12 text-center">
-          <HistoryIcon className="size-10 mx-auto text-muted-foreground/40 mb-3" />
-          <div className="font-medium">No saved calculations yet</div>
-          <div className="text-sm text-muted-foreground mt-1">
-            Open a calculator and click "Save to History" to keep a record.
+        <div className="rounded-3xl border border-dashed border-border/60 bg-gradient-to-br from-card to-muted/20 p-10 sm:p-14 text-center shadow-card">
+          <div className="size-16 rounded-2xl bg-primary/10 text-primary grid place-items-center mx-auto mb-4">
+            <HistoryIcon className="size-8" />
           </div>
+          <div className="font-semibold text-lg tracking-tight">No saved calculations yet</div>
+          <div className="text-sm text-muted-foreground mt-2 max-w-sm mx-auto leading-relaxed">
+            Run any calculator and tap <span className="font-medium text-foreground">Save to History</span> to build your personal record — stored only on this device.
+          </div>
+          <Link
+            to="/calculators"
+            className="inline-flex items-center gap-2 mt-6 h-11 px-6 rounded-2xl bg-gradient-to-r from-accent to-success text-accent-foreground font-semibold shadow-sm hover:brightness-105 active:scale-[0.98] transition"
+          >
+            <Calculator className="size-4" /> Open Calculators <ArrowRight className="size-4" />
+          </Link>
         </div>
       ) : (
         <>
@@ -90,7 +98,7 @@ function HistoryPage() {
           </div>
           <div className="space-y-2">
             {filtered.map((e) => (
-            <div key={e.id} className="rounded-xl border border-border bg-card p-4 flex items-start justify-between gap-4">
+            <div key={e.id} className="rounded-2xl border border-border/60 bg-card p-4 sm:p-5 flex items-start justify-between gap-4 shadow-card hover:shadow-card-hover transition-all duration-300">
               <div className="min-w-0 flex-1">
                 <div className="flex items-baseline gap-2 flex-wrap">
                   <div className="font-semibold">{e.calculator}</div>

@@ -137,7 +137,7 @@ export function CalculatorPanel({ initial }: { initial?: TabId }) {
   return (
     <div>
       {/* Premium horizontal tab bar — excellent mobile scroll + touch targets */}
-      <div className="flex gap-1.5 overflow-x-auto pb-3 mb-5 -mx-1 px-1 scrollbar-thin snap-x">
+      <div className="flex gap-1.5 overflow-x-auto pb-3 mb-5 -mx-1 px-1 scrollbar-none snap-x snap-mandatory">
         {TABS.map((t) => {
           const active = tab === t.id;
           return (

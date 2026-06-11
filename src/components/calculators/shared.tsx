@@ -140,7 +140,7 @@ export function CalcCard({
     destructive: "bg-destructive/15 text-destructive ring-1 ring-inset ring-destructive/20",
   }[accent];
   return (
-    <div className="rounded-3xl border border-border/70 bg-card shadow-sm overflow-hidden">
+    <div className="rounded-3xl border border-border/60 bg-card shadow-card overflow-hidden">
       <div className="flex items-center justify-between px-5 md:px-6 pt-5 pb-4 border-b border-border/60 bg-muted/30">
         <div className="flex items-center gap-3">
           <div className={cn("size-10 rounded-2xl grid place-items-center shadow-inner", accentBg)}>
@@ -172,7 +172,7 @@ export function LivePreview({ result }: { result: CalcResult | null }) {
   return (
     <div
       aria-live="polite"
-      className="rounded-2xl border border-accent/30 bg-gradient-to-br from-accent/8 via-accent/5 to-success/5 px-3.5 sm:px-4 py-3 sm:py-3.5 flex flex-wrap items-center gap-x-2.5 gap-y-1.5 shadow-sm ring-1 ring-inset ring-accent/10"
+      className="rounded-2xl border border-accent/30 bg-gradient-to-br from-accent/8 via-accent/5 to-success/5 px-3.5 sm:px-4 py-3 sm:py-3.5 flex flex-wrap items-center gap-x-2.5 gap-y-1.5 shadow-card ring-1 ring-inset ring-accent/10 transition-shadow duration-300"
     >
       <div className="inline-flex items-center gap-1.5 rounded-full bg-accent/15 text-accent px-2 py-0.5 text-[10px] font-semibold tracking-[0.5px]">
         <Sparkles className="size-3" /> LIVE
@@ -330,7 +330,7 @@ export function ResultPanel({
   };
 
   return (
-    <div className="mt-4 rounded-3xl border border-border/70 bg-card overflow-hidden shadow-sm">
+    <div className="mt-4 rounded-3xl border border-border/60 bg-card overflow-hidden shadow-card animate-in fade-in slide-in-from-bottom-2 duration-300">
       {/* Prominent result header */}
       <div className="p-4 sm:p-5 md:p-6 bg-gradient-to-br from-primary/8 via-background to-accent/5">
         <div className="flex items-center gap-2 text-[10px] font-semibold tracking-[1px] text-primary/80 mb-1">
@@ -388,10 +388,13 @@ export function ResultPanel({
         </div>
       )}
 
-      {/* Strong clinical disclaimer */}
-      <div className="px-4 sm:px-5 md:px-6 py-2 border-t border-border/70 bg-warning/10 text-[10px] sm:text-[11px] text-warning-foreground/90 flex gap-2">
-        <AlertTriangle className="size-3.5 mt-px shrink-0" />
-        <span>For reference and educational use only. Always verify with a licensed pharmacist and current clinical guidelines before patient use.</span>
+      {/* Strong clinical disclaimer — consistent across all calculators */}
+      <div className="px-4 sm:px-5 md:px-6 py-3 border-t border-warning/20 bg-gradient-to-r from-warning/10 to-warning/5 text-[10px] sm:text-[11px] text-warning-foreground flex gap-2.5">
+        <AlertTriangle className="size-4 mt-px shrink-0 text-warning" />
+        <div>
+          <div className="font-semibold uppercase tracking-wide text-[9px] sm:text-[10px] mb-0.5 opacity-80">Clinical Disclaimer</div>
+          <span className="leading-relaxed">For reference and educational use only. Always verify with a licensed pharmacist and current clinical guidelines before patient use. Not a substitute for professional judgment.</span>
+        </div>
       </div>
 
       {/* Actions — clean premium buttons (cohesive with dashboard) */}

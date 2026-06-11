@@ -10,6 +10,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { AppShell } from "@/components/AppShell";
+import { Toaster } from "@/components/ui/sonner";
 import { PatientProvider } from "@/lib/patient-context";
 
 function NotFoundComponent() {
@@ -80,6 +81,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
     ],
     links: [
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap",
+      },
       { rel: "stylesheet", href: appCss },
       { rel: "manifest", href: "/manifest.json" },
       { rel: "icon", href: "/icons/pharmacalc-icon.svg", type: "image/svg+xml" },
@@ -146,6 +153,8 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <PatientProvider>
         <AppShell />
+        {/* Toast notifications — PWA install success, iOS guide, etc. */}
+        <Toaster position="top-center" richColors closeButton />
       </PatientProvider>
     </QueryClientProvider>
   );

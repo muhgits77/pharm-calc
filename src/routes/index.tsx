@@ -55,6 +55,7 @@ import {
   Award, Clock, TrendingUp, ShieldCheck, Star,
 } from "lucide-react";
 import { useMemo } from "react";
+import { InstallAppButton } from "@/components/InstallAppButton";
 import { useHistory, type HistoryEntry } from "@/lib/history";
 
 export const Route = createFileRoute("/")({
@@ -190,7 +191,7 @@ function TileCard({ t }: { t: Tile }) {
     <Link
       to="/calculators"
       search={{ tab: t.to }}
-      className={`group relative flex flex-col rounded-2xl border border-border/70 bg-gradient-to-br ${t.color} p-6 shadow-sm hover:shadow-lg hover:border-border transition-all duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring`}
+      className={`group relative flex flex-col rounded-2xl border border-border/60 bg-gradient-to-br ${t.color} p-5 sm:p-6 shadow-card hover:shadow-card-hover hover:border-border transition-all duration-300 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.99]`}
     >
       {t.badge && (
         <span className="absolute top-4 right-4 text-[10px] font-semibold tracking-[0.5px] px-2 py-0.5 rounded-full bg-foreground text-background shadow-sm">
@@ -263,7 +264,7 @@ function StatsBar({ totalCalculators, history }: { totalCalculators: number; his
         return (
           <div
             key={i}
-            className="rounded-2xl border border-border/70 bg-card px-4 py-3.5 flex items-center gap-3 shadow-sm"
+            className="rounded-2xl border border-border/60 bg-card px-4 py-3.5 flex items-center gap-3 shadow-card hover:shadow-card-hover transition-shadow duration-300"
           >
             <div className="size-9 rounded-xl bg-muted grid place-items-center shrink-0">
               <Icon className="size-4 text-muted-foreground" />
@@ -286,12 +287,22 @@ function StatsBar({ totalCalculators, history }: { totalCalculators: number; his
 function RecentCalculations({ history }: { history: HistoryEntry[] }) {
   if (history.length === 0) {
     return (
-      <section className="rounded-3xl border border-dashed border-border/70 bg-card/40 p-6">
-        <div className="flex items-center gap-3 text-muted-foreground">
-          <History className="size-5 opacity-60" />
-          <div>
-            <div className="font-medium text-sm">No recent calculations yet</div>
-            <div className="text-xs mt-0.5">Run a calculator and hit “Save to History” — your work appears here instantly.</div>
+      <section className="rounded-3xl border border-dashed border-border/60 bg-gradient-to-br from-card/80 to-muted/20 p-6 sm:p-8 shadow-card">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <div className="size-14 rounded-2xl bg-primary/10 text-primary grid place-items-center shrink-0">
+            <History className="size-6" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="font-semibold text-base tracking-tight">No recent calculations yet</div>
+            <div className="text-sm text-muted-foreground mt-1 leading-relaxed">
+              Open any calculator, run your numbers, then tap <span className="font-medium text-foreground">Save to History</span> — results appear here instantly for quick recall at the bench.
+            </div>
+            <Link
+              to="/calculators"
+              className="inline-flex items-center gap-1.5 mt-3 h-9 px-4 rounded-xl bg-primary text-primary-foreground text-sm font-medium hover:brightness-105 active:scale-[0.98] transition"
+            >
+              Start calculating <ArrowRight className="size-3.5" />
+            </Link>
           </div>
         </div>
       </section>
@@ -320,7 +331,7 @@ function RecentCalculations({ history }: { history: HistoryEntry[] }) {
         </Link>
       </div>
 
-      <div className="rounded-2xl border border-border/70 bg-card overflow-hidden divide-y divide-border/70 shadow-sm">
+      <div className="rounded-2xl border border-border/60 bg-card overflow-hidden divide-y divide-border/60 shadow-card">
         {visible.map((h) => {
           const tab = getTabForCalculator(h.calculator);
           const content = (
@@ -374,48 +385,59 @@ function Dashboard() {
 
   return (
     <div className="space-y-8 md:space-y-10">
-      {/* HERO — stronger, visual, inviting */}
-      <section className="relative overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-primary/10 via-background to-accent/5 p-6 md:p-10 lg:p-11">
-        <div className="flex flex-col lg:flex-row gap-8 lg:gap-10 items-start">
+      {/* HERO — authoritative clinical welcome + offline/install emphasis */}
+      <section className="relative overflow-hidden rounded-3xl border border-border/60 bg-gradient-to-br from-primary/12 via-background to-accent/8 p-6 md:p-10 lg:p-12 shadow-card">
+        {/* Subtle decorative wash */}
+        <div className="pointer-events-none absolute -top-24 -right-24 size-64 rounded-full bg-accent/10 blur-3xl" aria-hidden />
+        <div className="pointer-events-none absolute -bottom-16 -left-16 size-48 rounded-full bg-primary/10 blur-3xl" aria-hidden />
+
+        <div className="relative flex flex-col lg:flex-row gap-8 lg:gap-10 items-start">
           <div className="flex-1 min-w-0">
-            <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 text-primary px-3 py-1 text-xs font-semibold tracking-[1px] mb-4">
-              PHARMACALC PRO
+            <div className="flex flex-wrap items-center gap-2 mb-4">
+              <div className="inline-flex items-center gap-2 rounded-full bg-primary/15 text-primary px-3 py-1 text-[11px] font-bold tracking-[1.5px]">
+                PHARMACALC PRO
+              </div>
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-accent/30 bg-accent/10 text-accent px-3 py-1 text-[11px] font-semibold">
+                <ShieldCheck className="size-3" /> Works Offline
+              </div>
             </div>
 
-            <h1 className="text-3xl md:text-4xl lg:text-[42px] leading-[1.05] font-semibold tracking-[-0.015em] max-w-[18ch]">
-              Precise calculations.<br />Trusted at the bench.
+            <h1 className="text-[2rem] sm:text-4xl lg:text-[2.75rem] leading-[1.08] font-bold tracking-[-0.02em] max-w-[20ch] text-balance">
+              Precise calculations.<br />
+              <span className="text-primary">Trusted at the bench.</span>
             </h1>
 
-            <p className="mt-3.5 max-w-xl text-[15px] text-muted-foreground">
-              15 professional pharmacy calculators with step-by-step workings, weight-adjusted formulas,
-              pediatric rules, MME safety warnings, and one-click PDF export.
+            <p className="mt-4 max-w-xl text-[15px] sm:text-base text-muted-foreground leading-relaxed">
+              15 professional pharmacy calculators with step-by-step workings, weight-adjusted renal dosing,
+              pediatric rules, MME safety warnings, and one-click PDF export — built for real pharmacy workflows.
             </p>
 
             {/* Trust signals */}
-            <div className="mt-4 flex flex-wrap gap-2">
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-card px-3 py-1 text-xs text-muted-foreground">
-                <ShieldCheck className="size-3.5" /> Local-first
+            <div className="mt-5 flex flex-wrap gap-2">
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-card/80 px-3 py-1.5 text-xs text-muted-foreground shadow-sm">
+                <ShieldCheck className="size-3.5 text-primary" /> 100% Local — no data leaves device
               </div>
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-card px-3 py-1 text-xs text-muted-foreground">
-                <Star className="size-3.5" /> Evidence-based
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-card/80 px-3 py-1.5 text-xs text-muted-foreground shadow-sm">
+                <Star className="size-3.5 text-warning" /> Evidence-based formulas
               </div>
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-card px-3 py-1 text-xs text-muted-foreground">
-                Instant PDF
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-card/80 px-3 py-1.5 text-xs text-muted-foreground shadow-sm">
+                Instant PDF export
               </div>
             </div>
 
-            <div className="mt-6 flex flex-wrap items-center gap-3">
+            <div className="mt-7 flex flex-wrap items-center gap-3">
               <Link
                 to="/calculators"
-                className="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-xl bg-gradient-to-r from-accent to-success text-accent-foreground font-semibold shadow-sm hover:brightness-105 active:brightness-95 transition"
+                className="inline-flex items-center justify-center gap-2 h-12 px-6 rounded-2xl bg-gradient-to-r from-accent to-success text-accent-foreground font-semibold shadow-md shadow-accent/20 hover:shadow-lg hover:brightness-105 active:scale-[0.98] transition-all duration-200"
               >
                 Open Calculators <ArrowRight className="size-4" />
               </Link>
+              <InstallAppButton variant="hero" />
               <Link
                 to="/history"
-                className="inline-flex items-center justify-center gap-2 h-11 px-5 rounded-xl border border-border bg-card hover:bg-secondary font-medium transition text-sm"
+                className="inline-flex items-center justify-center gap-2 h-12 px-5 rounded-2xl border border-border/70 bg-card hover:bg-secondary font-medium transition-all duration-200 text-sm active:scale-[0.98]"
               >
-                <History className="size-4" /> View History {history.length > 0 && <span className="tabular-nums">({history.length})</span>}
+                <History className="size-4" /> History {history.length > 0 && <span className="tabular-nums">({history.length})</span>}
               </Link>
             </div>
           </div>
