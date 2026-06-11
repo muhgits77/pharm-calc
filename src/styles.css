@@ -44,27 +44,33 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
   --font-display: "Plus Jakarta Sans", system-ui, sans-serif;
-  --shadow-card: 0 1px 3px oklch(0.2 0.02 240 / 0.06), 0 4px 12px oklch(0.2 0.02 240 / 0.04);
-  --shadow-card-hover: 0 4px 16px oklch(0.2 0.02 240 / 0.1), 0 8px 24px oklch(0.2 0.02 240 / 0.06);
+  --font-serif: "Source Serif 4", "Georgia", "Times New Roman", serif;
+  --color-gold: var(--gold);
+  --color-gold-foreground: var(--gold-foreground);
+  --shadow-card: 0 1px 3px oklch(0.2 0.04 150 / 0.06), 0 4px 12px oklch(0.2 0.04 150 / 0.04);
+  --shadow-card-hover: 0 4px 16px oklch(0.2 0.04 150 / 0.1), 0 8px 24px oklch(0.2 0.04 150 / 0.06);
+  --shadow-gold-glow: 0 0 24px oklch(0.75 0.12 85 / 0.15);
 }
 
 :root {
   --radius: 0.75rem;
-  /* Pharmacy: deep teal/blue primary, fresh green accent */
-  --background: oklch(0.985 0.005 230);
-  --foreground: oklch(0.20 0.04 240);
+  /* Kentucky Bluegrass: deep forest green primary, bluegrass accent, gold highlights */
+  --background: oklch(0.985 0.008 145);
+  --foreground: oklch(0.22 0.05 155);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.20 0.04 240);
+  --card-foreground: oklch(0.22 0.05 155);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.20 0.04 240);
-  --primary: oklch(0.55 0.13 220);
-  --primary-foreground: oklch(0.99 0.005 230);
-  --secondary: oklch(0.95 0.02 220);
-  --secondary-foreground: oklch(0.25 0.05 240);
-  --muted: oklch(0.96 0.01 230);
-  --muted-foreground: oklch(0.50 0.03 240);
-  --accent: oklch(0.65 0.15 165);
+  --popover-foreground: oklch(0.22 0.05 155);
+  --primary: oklch(0.42 0.10 155);
+  --primary-foreground: oklch(0.98 0.01 145);
+  --secondary: oklch(0.95 0.02 150);
+  --secondary-foreground: oklch(0.28 0.06 155);
+  --muted: oklch(0.96 0.015 145);
+  --muted-foreground: oklch(0.48 0.04 155);
+  --accent: oklch(0.58 0.14 155);
   --accent-foreground: oklch(0.99 0 0);
+  --gold: oklch(0.72 0.13 85);
+  --gold-foreground: oklch(0.22 0.06 85);
   --destructive: oklch(0.60 0.22 25);
   --destructive-foreground: oklch(0.99 0 0);
   --success: oklch(0.65 0.15 160);
@@ -73,34 +79,36 @@
   --warning-foreground: oklch(0.20 0.05 60);
   --info: oklch(0.65 0.13 240);
   --info-foreground: oklch(0.99 0 0);
-  --border: oklch(0.90 0.01 230);
-  --input: oklch(0.93 0.01 230);
-  --ring: oklch(0.55 0.13 220);
-  --sidebar: oklch(0.99 0.005 230);
-  --sidebar-foreground: oklch(0.25 0.04 240);
-  --sidebar-primary: oklch(0.55 0.13 220);
+  --border: oklch(0.90 0.02 145);
+  --input: oklch(0.93 0.015 145);
+  --ring: oklch(0.42 0.10 155);
+  --sidebar: oklch(0.99 0.008 145);
+  --sidebar-foreground: oklch(0.28 0.05 155);
+  --sidebar-primary: oklch(0.42 0.10 155);
   --sidebar-primary-foreground: oklch(0.99 0 0);
-  --sidebar-accent: oklch(0.95 0.02 220);
-  --sidebar-accent-foreground: oklch(0.25 0.05 240);
-  --sidebar-border: oklch(0.90 0.01 230);
-  --sidebar-ring: oklch(0.55 0.13 220);
+  --sidebar-accent: oklch(0.95 0.02 150);
+  --sidebar-accent-foreground: oklch(0.28 0.06 155);
+  --sidebar-border: oklch(0.90 0.02 145);
+  --sidebar-ring: oklch(0.42 0.10 155);
 }
 
 .dark {
-  --background: oklch(0.16 0.025 240);
-  --foreground: oklch(0.96 0.005 230);
-  --card: oklch(0.21 0.03 240);
-  --card-foreground: oklch(0.96 0.005 230);
-  --popover: oklch(0.21 0.03 240);
-  --popover-foreground: oklch(0.96 0.005 230);
-  --primary: oklch(0.70 0.13 200);
-  --primary-foreground: oklch(0.16 0.025 240);
-  --secondary: oklch(0.27 0.03 240);
-  --secondary-foreground: oklch(0.96 0.005 230);
-  --muted: oklch(0.25 0.03 240);
-  --muted-foreground: oklch(0.70 0.02 230);
-  --accent: oklch(0.70 0.15 165);
-  --accent-foreground: oklch(0.16 0.025 240);
+  --background: oklch(0.16 0.025 155);
+  --foreground: oklch(0.96 0.008 145);
+  --card: oklch(0.21 0.03 155);
+  --card-foreground: oklch(0.96 0.008 145);
+  --popover: oklch(0.21 0.03 155);
+  --popover-foreground: oklch(0.96 0.008 145);
+  --primary: oklch(0.68 0.12 155);
+  --primary-foreground: oklch(0.16 0.025 155);
+  --secondary: oklch(0.27 0.03 155);
+  --secondary-foreground: oklch(0.96 0.008 145);
+  --muted: oklch(0.25 0.03 155);
+  --muted-foreground: oklch(0.70 0.03 145);
+  --accent: oklch(0.65 0.14 155);
+  --accent-foreground: oklch(0.16 0.025 155);
+  --gold: oklch(0.78 0.12 85);
+  --gold-foreground: oklch(0.18 0.05 85);
   --destructive: oklch(0.65 0.22 25);
   --destructive-foreground: oklch(0.99 0 0);
   --success: oklch(0.70 0.15 160);
@@ -109,17 +117,17 @@
   --warning-foreground: oklch(0.16 0.025 240);
   --info: oklch(0.70 0.13 240);
   --info-foreground: oklch(0.16 0.025 240);
-  --border: oklch(0.30 0.025 240);
-  --input: oklch(0.27 0.03 240);
-  --ring: oklch(0.70 0.13 200);
-  --sidebar: oklch(0.19 0.025 240);
-  --sidebar-foreground: oklch(0.92 0.01 230);
-  --sidebar-primary: oklch(0.70 0.13 200);
-  --sidebar-primary-foreground: oklch(0.16 0.025 240);
-  --sidebar-accent: oklch(0.27 0.03 240);
-  --sidebar-accent-foreground: oklch(0.96 0.005 230);
-  --sidebar-border: oklch(0.30 0.025 240);
-  --sidebar-ring: oklch(0.70 0.13 200);
+  --border: oklch(0.30 0.025 155);
+  --input: oklch(0.27 0.03 155);
+  --ring: oklch(0.68 0.12 155);
+  --sidebar: oklch(0.19 0.025 155);
+  --sidebar-foreground: oklch(0.92 0.01 145);
+  --sidebar-primary: oklch(0.68 0.12 155);
+  --sidebar-primary-foreground: oklch(0.16 0.025 155);
+  --sidebar-accent: oklch(0.27 0.03 155);
+  --sidebar-accent-foreground: oklch(0.96 0.008 145);
+  --sidebar-border: oklch(0.30 0.025 155);
+  --sidebar-ring: oklch(0.68 0.12 155);
 }
 
 @layer base {
@@ -136,9 +144,22 @@
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
   }
-  h1, h2, h3 {
+  h1, h2, h3, .font-serif {
+    font-family: var(--font-serif);
     letter-spacing: -0.02em;
   }
+}
+
+/* Kentucky Bluegrass subtle entrance animations */
+@keyframes forge-shimmer {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+@utility animate-forge-shimmer {
+  animation: forge-shimmer 3s ease-in-out infinite;
+}
+@utility font-serif {
+  font-family: var(--font-serif);
 }
 
 /* Premium card shadow utility */
@@ -147,6 +168,9 @@
 }
 @utility shadow-card-hover {
   box-shadow: var(--shadow-card-hover);
+}
+@utility shadow-gold-glow {
+  box-shadow: var(--shadow-gold-glow);
 }
 
 /* Hide scrollbars on mobile tab bars while keeping scroll */

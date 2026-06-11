@@ -1,20 +1,11 @@
-/*
- * AppShell — layout shell (June 2026 polish)
- *
- * - PWA install button in header + mobile FAB (hidden when already installed)
- * - Refined sidebar/header typography, nav hover transitions, card-like footer
- * - Footer: clinical disclaimer + "Made with ❤️ for pharmacists" + version
- * - Main content fade-in for perceived performance
- * - Safe-area padding for notched phones
- */
-
 import { Link, useRouterState, Outlet } from "@tanstack/react-router";
-import { LayoutDashboard, Calculator, History, Moon, Sun, Pill, User2 } from "lucide-react";
+import { LayoutDashboard, Calculator, History, Moon, Sun, Pill, User2, Leaf } from "lucide-react";
 import { useTheme } from "@/lib/theme";
 import { usePatient } from "@/lib/patient-context";
 import { APP_VERSION } from "@/lib/version";
 import { cn } from "@/lib/utils";
 import { InstallAppButton } from "@/components/InstallAppButton";
+import { DisclaimerModal } from "@/components/DisclaimerModal";
 
 const nav = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -35,15 +26,14 @@ export function AppShell() {
 
   return (
     <div className="min-h-screen flex w-full bg-background text-foreground">
-      {/* Desktop sidebar */}
       <aside className="hidden md:flex flex-col w-64 border-r border-sidebar-border bg-sidebar/95 backdrop-blur-sm">
         <div className="px-5 py-5 flex items-center gap-3 border-b border-sidebar-border">
-          <div className="size-10 rounded-2xl bg-gradient-to-br from-primary via-primary to-accent grid place-items-center shadow-md shadow-primary/20">
+          <div className="size-10 rounded-2xl bg-gradient-to-br from-primary via-primary to-gold grid place-items-center shadow-md shadow-primary/20">
             <Pill className="size-5 text-primary-foreground" />
           </div>
           <div>
-            <div className="text-[15px] font-semibold tracking-tight text-sidebar-foreground">PharmaCalc</div>
-            <div className="text-[10px] uppercase tracking-[2px] text-muted-foreground font-medium">Pro</div>
+            <div className="font-serif text-[15px] font-semibold tracking-tight text-sidebar-foreground">PharmaCalc</div>
+            <div className="text-[10px] uppercase tracking-[2px] text-gold font-medium">Pro · Kentucky</div>
           </div>
         </div>
         <nav className="flex-1 p-3 space-y-1">
@@ -66,24 +56,28 @@ export function AppShell() {
             );
           })}
         </nav>
-        <div className="p-4 border-t border-sidebar-border space-y-2">
+        <div className="p-4 border-t border-sidebar-border space-y-3">
           <InstallAppButton variant="hero" />
-          <p className="text-[10px] leading-relaxed text-muted-foreground">
-            For educational use. Always verify with a licensed pharmacist.
-          </p>
+          <DisclaimerModal
+            trigger={
+              <button className="w-full text-left text-[10px] leading-relaxed text-muted-foreground hover:text-gold transition-colors underline-offset-2 hover:underline">
+                Educational use only — view full disclaimer
+              </button>
+            }
+          />
         </div>
       </aside>
 
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Sticky header */}
         <header className="h-14 border-b border-border/80 flex items-center justify-between px-3 sm:px-4 md:px-6 bg-background/85 backdrop-blur-md sticky top-0 z-30 supports-[padding:max(0px)]:pt-[env(safe-area-inset-top)]">
           <div className="flex items-center gap-2 md:hidden min-w-0">
-            <div className="size-8 rounded-xl bg-gradient-to-br from-primary to-accent grid place-items-center shadow-sm shrink-0">
+            <div className="size-8 rounded-xl bg-gradient-to-br from-primary to-gold grid place-items-center shadow-sm shrink-0">
               <Pill className="size-4 text-primary-foreground" />
             </div>
-            <span className="font-semibold tracking-tight truncate">PharmaCalc Pro</span>
+            <span className="font-serif font-semibold tracking-tight truncate">PharmaCalc Pro</span>
           </div>
-          <div className="hidden md:block text-sm text-muted-foreground font-medium tracking-tight">
+          <div className="hidden md:flex items-center gap-2 text-sm text-muted-foreground font-medium tracking-tight">
+            <Leaf className="size-3.5 text-gold" />
             Professional Pharmacy Calculations
           </div>
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
@@ -111,7 +105,6 @@ export function AppShell() {
           </div>
         </header>
 
-        {/* Mobile tab nav */}
         <nav className="md:hidden flex gap-1.5 p-2 border-b border-border/80 overflow-x-auto scrollbar-none bg-background/60 backdrop-blur-sm">
           {nav.map((n) => {
             const active = n.to === "/" ? path === "/" : path.startsWith(n.to);
@@ -133,22 +126,33 @@ export function AppShell() {
           })}
         </nav>
 
-        {/* Page content with subtle entrance animation */}
         <main className="flex-1 p-4 sm:p-5 md:p-8 max-w-6xl w-full mx-auto animate-in fade-in slide-in-from-bottom-2 duration-300 pb-24 md:pb-8">
           <Outlet />
         </main>
 
-        {/* Mobile FAB install prompt */}
         <InstallAppButton variant="fab" />
 
-        {/* Footer */}
-        <footer className="px-4 sm:px-6 py-4 border-t border-border/80 bg-card/30 backdrop-blur-sm space-y-2 supports-[padding:max(0px)]:pb-[max(1rem,env(safe-area-inset-bottom))]">
-          <p className="text-[11px] text-muted-foreground leading-relaxed">
-            ⚠️ PharmaCalc Pro is for educational and reference use only. Always verify calculations
-            with a licensed pharmacist before clinical use.
-          </p>
+        <footer className="px-4 sm:px-6 py-4 border-t border-border/80 bg-card/30 backdrop-blur-sm space-y-3 supports-[padding:max(0px)]:pb-[max(1rem,env(safe-area-inset-bottom))]">
+          <div className="rounded-xl border border-warning/25 bg-warning/8 px-4 py-3 space-y-2">
+            <p className="text-[11px] text-muted-foreground leading-relaxed">
+              <span className="font-semibold text-foreground">Clinical Disclaimer:</span>{" "}
+              PharmaCalc Pro is for educational and reference use only. All calculations run locally on your device.
+              Always verify results with a licensed pharmacist and current clinical guidelines before patient use.
+              Not a substitute for professional clinical judgment.
+            </p>
+            <DisclaimerModal
+              trigger={
+                <button className="text-[11px] font-medium text-gold hover:underline">
+                  View complete disclaimer &amp; limitations →
+                </button>
+              }
+            />
+          </div>
           <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-muted-foreground/80">
-            <span className="font-medium">Made with <span className="text-destructive/90">❤️</span> for pharmacists</span>
+            <span className="font-medium flex items-center gap-1.5">
+              <Leaf className="size-3 text-gold" />
+              Kentucky Bluegrass Digital Forge · Crafted for pharmacists
+            </span>
             <span className="tabular-nums font-mono text-[10px] bg-muted/60 px-2 py-0.5 rounded-md">v{APP_VERSION}</span>
           </div>
         </footer>

@@ -131,24 +131,39 @@ const TABS: { id: TabId; label: string; icon: React.ComponentType<{ className?: 
 
 export const VALID_TABS = TABS.map((t) => t.id);
 
-export function CalculatorPanel({ initial }: { initial?: TabId }) {
+export function CalculatorPanel({
+  initial,
+  onTabChange,
+}: {
+  initial?: TabId;
+  onTabChange?: (tab: TabId) => void;
+}) {
   const [tab, setTab] = useState<TabId>(initial ?? "dosage");
 
+  useEffect(() => {
+    if (initial) setTab(initial);
+  }, [initial]);
+
+  const selectTab = (id: TabId) => {
+    setTab(id);
+    onTabChange?.(id);
+  };
+
   return (
-    <div>
-      {/* Premium horizontal tab bar — excellent mobile scroll + touch targets */}
+    <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+      {/* Grouped category labels in tab bar for quicker scanning */}
       <div className="flex gap-1.5 overflow-x-auto pb-3 mb-5 -mx-1 px-1 scrollbar-none snap-x snap-mandatory">
         {TABS.map((t) => {
           const active = tab === t.id;
           return (
             <button
               key={t.id}
-              onClick={() => setTab(t.id)}
+              onClick={() => selectTab(t.id)}
               className={cn(
                 "inline-flex items-center gap-1.5 h-9 px-3.5 sm:px-4 rounded-2xl text-xs font-medium whitespace-nowrap border transition-all snap-start active:scale-[0.985]",
                 active
-                  ? "bg-gradient-to-r from-accent to-success text-accent-foreground border-transparent shadow-sm"
-                  : "bg-card text-muted-foreground border-border hover:text-foreground hover:border-foreground/30 active:bg-muted",
+                  ? "bg-gradient-to-r from-primary to-accent text-primary-foreground border-transparent shadow-sm ring-1 ring-gold/20"
+                  : "bg-card text-muted-foreground border-border hover:text-foreground hover:border-gold/30 active:bg-muted",
               )}
             >
               <t.icon className="size-3.5" /> {t.label}

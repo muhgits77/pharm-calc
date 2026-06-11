@@ -203,7 +203,7 @@ export function CalculateButton({
     <button
       onClick={onClick}
       disabled={disabled}
-      className="w-full h-11 mt-1 rounded-2xl bg-gradient-to-r from-accent to-success text-accent-foreground font-semibold tracking-[-0.1px] shadow-sm hover:shadow active:brightness-95 active:scale-[0.985] disabled:opacity-60 disabled:cursor-not-allowed transition flex items-center justify-center gap-2 text-sm"
+      className="w-full h-11 mt-1 rounded-2xl bg-gradient-to-r from-primary to-accent text-primary-foreground font-semibold tracking-[-0.1px] shadow-sm hover:shadow active:brightness-95 active:scale-[0.985] disabled:opacity-60 disabled:cursor-not-allowed transition flex items-center justify-center gap-2 text-sm"
     >
       <span className="inline-block size-3.5 rounded-sm bg-accent-foreground/25" />
       {label ?? "Calculate"}
@@ -266,75 +266,149 @@ export function ResultPanel({
   const handlePDF = () => {
     const doc = new jsPDF({ unit: "pt", format: "letter" });
     const M = 48;
+    const W = 515;
+    const pageW = 612;
     let y = M;
+
+    const drawHeader = () => {
+      doc.setFillColor(26, 92, 58);
+      doc.rect(0, 0, pageW, 72, "F");
+      doc.setFillColor(201, 162, 39);
+      doc.rect(0, 72, pageW, 3, "F");
+      doc.setTextColor(255, 255, 255);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(20);
+      doc.text("PharmaCalc Pro", M, 32);
+      doc.setFontSize(9);
+      doc.setFont("helvetica", "normal");
+      doc.text("Kentucky Bluegrass Digital Forge · Professional Pharmacy Calculations", M, 48);
+      doc.setFontSize(8);
+      doc.text("100% Local · Educational Reference Tool", M, 60);
+      y = 92;
+      doc.setTextColor(30, 30, 30);
+    };
+
+    const ensureSpace = (needed: number) => {
+      if (y + needed > 740) {
+        doc.addPage();
+        drawHeader();
+      }
+    };
+
+    const sectionTitle = (title: string) => {
+      ensureSpace(24);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(11);
+      doc.setTextColor(26, 92, 58);
+      doc.text(title.toUpperCase(), M, y);
+      y += 6;
+      doc.setDrawColor(201, 162, 39);
+      doc.setLineWidth(0.5);
+      doc.line(M, y, M + 80, y);
+      y += 14;
+      doc.setTextColor(30, 30, 30);
+    };
+
+    drawHeader();
+
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(18);
-    doc.text("PharmaCalc Pro", M, y); y += 22;
-    doc.setFontSize(14);
-    doc.text(calculator, M, y); y += 18;
+    doc.setFontSize(16);
+    doc.text(calculator, M, y);
+    y += 20;
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
-    doc.setTextColor(110);
-    doc.text(new Date().toLocaleString(), M, y); y += 14;
+    doc.setTextColor(100);
+    doc.text(`Generated: ${new Date().toLocaleString()}`, M, y);
+    y += 14;
     if (patientLine) {
-      doc.text(patientLine, M, y); y += 14;
+      doc.text(`Patient Context: ${patientLine}`, M, y);
+      y += 14;
     }
-    y += 6;
-    doc.setTextColor(20);
-
-    doc.setFont("helvetica", "bold"); doc.setFontSize(11);
-    doc.text("Inputs", M, y); y += 14;
-    doc.setFont("helvetica", "normal"); doc.setFontSize(10);
-    Object.entries(inputs).forEach(([k, v]) => {
-      doc.text(`• ${k}: ${String(v)}`, M + 8, y); y += 13;
-    });
     y += 8;
+    doc.setTextColor(30, 30, 30);
 
-    doc.setFont("helvetica", "bold"); doc.setFontSize(11);
-    doc.text("Result", M, y); y += 16;
-    doc.setFontSize(20);
-    doc.text(`${result.primary} ${result.unit ?? ""}`, M, y); y += 22;
+    sectionTitle("Inputs");
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    Object.entries(inputs).forEach(([k, v]) => {
+      ensureSpace(14);
+      doc.text(`${k}: ${String(v)}`, M + 4, y);
+      y += 13;
+    });
+    y += 6;
+
+    sectionTitle("Final Result");
+    ensureSpace(30);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(22);
+    doc.setTextColor(26, 92, 58);
+    doc.text(`${result.primary} ${result.unit ?? ""}`, M, y);
+    y += 26;
+    doc.setTextColor(30, 30, 30);
 
     if (result.warning) {
-      doc.setFontSize(10); doc.setTextColor(180, 40, 40);
-      const lines = doc.splitTextToSize(`! ${result.warning}`, 515);
-      doc.text(lines, M, y); y += lines.length * 12 + 6;
-      doc.setTextColor(20);
+      ensureSpace(20);
+      doc.setFontSize(10);
+      doc.setTextColor(180, 50, 40);
+      const warnLines = doc.splitTextToSize(`Warning: ${result.warning}`, W);
+      doc.text(warnLines, M, y);
+      y += warnLines.length * 12 + 8;
+      doc.setTextColor(30, 30, 30);
     }
 
     if (result.steps.length) {
-      doc.setFont("helvetica", "bold"); doc.setFontSize(11);
-      doc.text("Step-by-step", M, y); y += 14;
-      doc.setFont("helvetica", "normal"); doc.setFontSize(10);
+      sectionTitle("Step-by-Step Working");
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(10);
       result.steps.forEach((s, i) => {
-        const lines = doc.splitTextToSize(`${i + 1}. ${s.label}: ${s.value}`, 515);
-        if (y + lines.length * 13 > 740) { doc.addPage(); y = M; }
-        doc.text(lines, M, y);
-        y += lines.length * 13 + 2;
+        const lines = doc.splitTextToSize(`${i + 1}. ${s.label}: ${s.value}`, W - 16);
+        ensureSpace(lines.length * 13 + 4);
+        doc.setFillColor(240, 248, 244);
+        doc.roundedRect(M, y - 10, W, lines.length * 13 + 6, 3, 3, "F");
+        doc.text(lines, M + 8, y);
+        y += lines.length * 13 + 8;
       });
     }
+
     if (result.note) {
-      y += 6;
-      doc.setFont("helvetica", "italic"); doc.setFontSize(9); doc.setTextColor(90);
-      const lines = doc.splitTextToSize(`Note: ${result.note}`, 515);
-      doc.text(lines, M, y); y += lines.length * 11 + 8;
+      ensureSpace(20);
+      doc.setFont("helvetica", "italic");
+      doc.setFontSize(9);
+      doc.setTextColor(80);
+      const noteLines = doc.splitTextToSize(`Clinical Note: ${result.note}`, W);
+      doc.text(noteLines, M, y);
+      y += noteLines.length * 11 + 10;
     }
-    doc.setFont("helvetica", "italic"); doc.setFontSize(9); doc.setTextColor(140);
+
+    ensureSpace(60);
+    y += 4;
+    doc.setFillColor(255, 248, 230);
+    doc.setDrawColor(201, 162, 39);
+    doc.setLineWidth(0.5);
     const disc = doc.splitTextToSize(
-      "For reference only — always verify clinically with a licensed pharmacist before patient use. PharmaCalc Pro is not a substitute for professional clinical judgment.",
-      515,
+      "CLINICAL DISCLAIMER: For educational and reference use only. Always verify with a licensed pharmacist and current clinical guidelines before patient use. PharmaCalc Pro is not FDA-cleared and is not a substitute for professional clinical judgment. All data processed locally on device.",
+      W - 16,
     );
-    if (y + disc.length * 11 > 760) { doc.addPage(); y = M; }
-    doc.text(disc, M, y);
-    doc.save(`${calculator.replace(/\s+/g, "-")}-${Date.now()}.pdf`);
+    const boxH = disc.length * 11 + 20;
+    doc.roundedRect(M, y, W, boxH, 4, 4, "FD");
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(8);
+    doc.setTextColor(120, 90, 20);
+    doc.text("IMPORTANT — READ BEFORE CLINICAL USE", M + 10, y + 14);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8);
+    doc.setTextColor(60, 60, 60);
+    doc.text(disc, M + 10, y + 26);
+
+    doc.save(`PharmaCalc-${calculator.replace(/\s+/g, "-")}-${Date.now()}.pdf`);
   };
 
   return (
     <div className="mt-4 rounded-3xl border border-border/60 bg-card overflow-hidden shadow-card animate-in fade-in slide-in-from-bottom-2 duration-300">
       {/* Prominent result header */}
-      <div className="p-4 sm:p-5 md:p-6 bg-gradient-to-br from-primary/8 via-background to-accent/5">
+      <div className="p-4 sm:p-5 md:p-6 bg-gradient-to-br from-primary/8 via-background to-gold/5">
         <div className="flex items-center gap-2 text-[10px] font-semibold tracking-[1px] text-primary/80 mb-1">
-          <div className="h-px w-4 bg-primary/40" /> FINAL RESULT
+          <div className="h-px w-4 bg-gold/60" /> FINAL RESULT
         </div>
         <div className="flex items-baseline gap-x-2 gap-y-1 flex-wrap">
           <div className="text-4xl sm:text-5xl md:text-[52px] font-semibold tracking-[-1px] sm:tracking-[-1.2px] text-foreground tabular-nums leading-none">
