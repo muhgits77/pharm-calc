@@ -29,23 +29,18 @@ All calculations run 100% locally in the browser. No data leaves your device. Pa
 ## Tech Stack
 
 - TanStack Start + React 19 + Vite (SSR + client hydration)
+- Nitro with `vercel` preset (Vercel Build Output API)
 - TypeScript, Tailwind 4, Radix UI primitives
-- Pure client-side math (zero external APIs or tracking for core functions)
+- Pure client-side math (zero external APIs for core calculators)
 - jsPDF for offline PDF generation
 - Local-first storage (localStorage)
 
 ## Getting Started (Local Development)
 
 ```bash
-# 1. Clone
 git clone https://github.com/<your-org>/pharm-calc.git
 cd pharm-calc
-
-# 2. Install (clean recommended after any lock changes)
-rm -rf node_modules package-lock.json
 npm install
-
-# 3. Run dev server
 npm run dev
 ```
 
@@ -55,76 +50,79 @@ Open http://localhost:5173 (or the port shown).
 
 ```bash
 npm run build
-npm run preview   # serves the production build locally
+npm run preview
 ```
 
-## Deployment — Vercel (Recommended)
+## Deployment — Vercel
 
-1. Push to GitHub.
-2. Import the repo in Vercel (or connect via Git).
-3. **Framework Preset**: Other / Vite (or leave auto).
-4. **Build Command**: `npm run build` (default)
-5. **Output Directory**: leave default (Vercel detects from Nitro `.output` or static assets).
-6. **Install Command**: `npm install` (or `npm install --legacy-peer-deps` only if you ever see peer issues — not required after our fixes).
-7. Deploy.
+Nitro emits a [Build Output API v3](https://vercel.com/docs/build-output-api/v3) bundle at `.vercel/output`. Vercel detects this automatically — **do not** set a custom Output Directory.
 
-The app is SSR via Nitro (TanStack Start) but all calculator logic + assets are precached by the service worker for reliable offline use after install.
+### Vercel Project Settings
 
-See "Vercel redeploy instructions" section below for updates.
+| Setting | Value |
+|---------|-------|
+| **Framework Preset** | Other (or Vite) |
+| **Install Command** | `npm install` |
+| **Build Command** | `npm run build` |
+| **Output Directory** | *(leave empty — Nitro handles routing)* |
+| **Node.js Version** | 22.x or 24.x |
 
-## PWA / Offline Support (Critical for Pharmacy Environments)
+### First deploy checklist
 
-- `manifest.json` with name **"PharmaCalc Pro"**, proper icons, theme color, and `display: standalone`.
-- Custom service worker (`/sw.js`) that precaches the app shell, JS bundles, CSS, and static assets on first load.
-- Once installed (via browser "Add to Home Screen" / "Install" prompt on mobile), the full app (all 15 calculators, PDF export, history, patient context) works **completely offline**.
-- Ideal for pharmacies with spotty cell service, basements, or rural locations.
-- Updates are delivered automatically in background when online.
+1. Push to GitHub and import the repo in Vercel.
+2. Confirm Output Directory is **blank** (not `dist` or `.vercel/output`).
+3. Deploy, then **Redeploy → without Build Cache** if you previously had 404s.
+4. Visit `/`, `/calculators`, and `/history` — all should SSR correctly.
+
+### Why 404s happen (and how this project fixes them)
+
+TanStack Start is a full-stack SSR framework. Without Nitro's `vercel` preset, Vercel serves static files only and returns 404 for every route. This project uses:
+
+- `nitro({ preset: "vercel" })` in `vite.config.ts`
+- No `outputDirectory` in `vercel.json` (Nitro writes `.vercel/output/config.json` with catch-all routing to `__server`)
+
+## PWA / Offline Support
+
+- `manifest.json` — installable app with shortcuts to Calculators and History
+- `sw.js` — precaches app shell, routes, and hashed assets
+- All 15 calculators, PDF export, history, and patient context work **completely offline** after first load
 
 **To test offline:**
-- Build + preview, or deploy.
-- Open in Chrome/Edge on desktop or Android/iOS Safari/Chrome.
-- Install the PWA.
-- Turn on airplane mode / disable Wi-Fi — everything still calculates and exports.
 
-## Mobile-First Polish
+1. `npm run build && npm run preview` (or deploy to Vercel)
+2. Open in Chrome/Edge or mobile Safari/Chrome
+3. Install the PWA ("Add to Home Screen")
+4. Enable airplane mode — calculators still run
 
-- Bottom navigation + horizontal scrollable calculator tabs on small screens.
-- Sidebar hidden on mobile (desktop-only persistent nav).
-- All number inputs: `inputMode="decimal"`, `text-base` on mobile (prevents iOS zoom), tall 44px+ touch targets.
-- Selects and date fields also use `text-base md:text-sm`.
-- Responsive typography, generous padding, no horizontal overflow.
-- Active scale micro-interactions for tactile feedback.
+## Scripts
 
-## Project Structure (Key Files)
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start dev server (HMR) |
+| `npm run build` | Production build (Nitro → `.vercel/output`) + PWA asset copy |
+| `npm run preview` | Preview the built app locally |
+| `npm run lint` | ESLint |
+| `npm run format` | Prettier format |
+
+## Project Structure
 
 ```
 src/
 ├── components/
-│   ├── AppShell.tsx          # Layout + responsive nav
+│   ├── AppShell.tsx
 │   └── calculators/
-│       ├── CalculatorPanel.tsx
-│       └── shared.tsx        # NumInput, CalcCard, ResultPanel, PDF, etc.
 ├── lib/
-│   ├── calculators.ts        # All pure math functions (the heart of the app)
-│   ├── history.ts            # localStorage history
-│   └── patient-context.tsx   # Shared patient state
-├── routes/                   # TanStack Router file-based routes
-└── __root.tsx                # Root meta, providers, PWA registration
+│   ├── calculators.ts        # Pure math functions
+│   ├── history.ts
+│   └── patient-context.tsx
+├── routes/                   # File-based TanStack Router routes
+├── server.ts                 # SSR entry with error handling
+└── start.ts
 public/
 ├── manifest.json
 ├── sw.js
-└── icons/                    # PWA + favicon assets
+└── icons/
 ```
-
-## Scripts
-
-| Command           | Description                     |
-|-------------------|---------------------------------|
-| `npm run dev`     | Start dev server (HMR)          |
-| `npm run build`   | Production build (Nitro SSR)    |
-| `npm run preview` | Preview the built app locally   |
-| `npm run lint`    | ESLint                          |
-| `npm run format`  | Prettier format                 |
 
 ## Important Clinical Notes
 
@@ -132,16 +130,6 @@ public/
 - Legacy pediatric rules (Young's/Clark's) are included for education and clearly labeled as historical approximations.
 - MME warnings surface at clinically relevant thresholds.
 - **Never use this app as the sole source for patient care decisions.**
-
-## Contributing / Customization
-
-This is a production-grade reference tool. PRs welcome for:
-- Additional calculators or improved formulas
-- Better accessibility / i18n
-- Refined clinical notes or references
-- Enhanced offline resilience
-
-Please keep the core principle: **everything must continue to work 100% offline**.
 
 ## License
 

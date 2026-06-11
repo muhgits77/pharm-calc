@@ -2,7 +2,7 @@
 /**
  * PharmaCalc Pro — Post-build PWA asset copier
  *
- * The Lovable/TanStack + Nitro (vercel preset) build primarily outputs Vite client chunks
+ * TanStack Start + Nitro (vercel preset) outputs Vite client chunks
  * into .vercel/output/static/assets (and legacy dist/client/assets).
  *
  * This script ensures the root-level PWA files (manifest.json, sw.js) + icons/

@@ -18,6 +18,12 @@ dist-ssr
 .tanstack/**
 .nitro
 .vercel
+.vercel/output
+
+# Lock files from other package managers (project uses npm)
+bun.lock
+pnpm-lock.yaml
+yarn.lock
 
 # Environment & secrets
 .env
