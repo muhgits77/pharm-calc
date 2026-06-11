@@ -12,4 +12,10 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  // Force-enable Nitro for production builds (Vercel, etc.). Use vercel preset for seamless SSR deployment.
+  nitro: {
+    preset: "vercel",
+    // Additional production hardening for offline-first PWA use case
+    minify: true,
+  },
 });

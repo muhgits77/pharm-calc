@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" aria-hidden="true">
+  <!-- PharmaCalc Pro — Professional pharmacy app icon -->
+  <!-- Deep teal background, clean medical aesthetic, pill + precise calc symbol -->
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0e7490"/>
+      <stop offset="100%" stop-color="#134e4b"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="30%" y1="20%" x2="80%" y2="90%">
+      <stop offset="0%" stop-color="#14b8a6"/>
+      <stop offset="100%" stop-color="#0f766e"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Rounded square background (modern iOS/Android PWA style) -->
+  <rect x="32" y="32" width="448" height="448" rx="96" fill="url(#bg)"/>
+
+  <!-- Subtle inner ring for premium depth -->
+  <rect x="56" y="56" width="400" height="400" rx="80" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="12"/>
+
+  <!-- Central mortar / shield shape (pharmacy trust + compounding) -->
+  <path d="M170 140 Q 256 92 342 140 L 342 260 Q 342 320 256 348 Q 170 320 170 260 Z" fill="#ffffff" fill-opacity="0.95"/>
+  
+  <!-- Inner precision calculator / cross symbol (accuracy) -->
+  <g fill="#0e7490">
+    <!-- Horizontal bar of Rx / calc -->
+    <rect x="206" y="188" width="100" height="22" rx="4"/>
+    <!-- Vertical -->
+    <rect x="244" y="166" width="24" height="66" rx="4"/>
+    <!-- Small pill accent -->
+    <ellipse cx="256" cy="260" rx="22" ry="13" fill="url(#accent)" opacity="0.9"/>
+    <ellipse cx="256" cy="260" rx="14" ry="7" fill="#ffffff" opacity="0.35"/>
+  </g>
+
+  <!-- "PRO" micro-badge for premium feel (bottom right) -->
+  <rect x="320" y="312" width="68" height="28" rx="8" fill="#14b8a6"/>
+  <text x="354" y="332" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="700" fill="#0f172a" text-anchor="middle">PRO</text>
+</svg>

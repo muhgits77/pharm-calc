@@ -1,0 +1,44 @@
+{
+  "name": "PharmaCalc Pro",
+  "short_name": "PharmaCalc Pro",
+  "description": "Professional offline pharmacy calculators: dosage, CrCl, BSA, IBW, MME, IV drip, pediatric, compounding & more. Works reliably with poor cell service.",
+  "start_url": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "background_color": "#0f172a",
+  "theme_color": "#0e7490",
+  "orientation": "any",
+  "scope": "/",
+  "categories": ["medical", "health", "productivity", "utilities"],
+  "lang": "en",
+  "icons": [
+    {
+      "src": "/icons/pharmacalc-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/pharmacalc-icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Calculators",
+      "short_name": "Calculators",
+      "description": "Open the full pharmacy calculator suite",
+      "url": "/calculators",
+      "icons": [{ "src": "/icons/pharmacalc-icon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "History",
+      "short_name": "History",
+      "description": "View saved calculations",
+      "url": "/history",
+      "icons": [{ "src": "/icons/pharmacalc-icon.svg", "sizes": "any" }]
+    }
+  ]
+}
